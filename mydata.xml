@@ -1,0 +1,103 @@
+<?xml version="1.0"?> 
+<machines> 
+<machine yearOfProduction="-2"> 
+<summary year="0" profit="0" serviseCost="0" delta="0" /> 
+<summary year="1" profit="0" serviseCost="0" delta="0" /> 
+<summary year="2" profit="0" serviseCost="0" delta="0" /> 
+<summary year="3" profit="60" serviseCost="55" delta="250" /> 
+<summary year="4" profit="60" serviseCost="55" delta="260" /> 
+<summary year="5" profit="50" serviseCost="55" delta="270" /> 
+<summary year="6" profit="50" serviseCost="60" delta="280" /> 
+<summary year="7" profit="50" serviseCost="60" delta="280" /> 
+<summary year="8" profit="40" serviseCost="60" delta="290" /> 
+<summary year="9" profit="40" serviseCost="60" delta="290" /> 
+<summary year="10" profit="40" serviseCost="65" delta="300" /> 
+<summary year="11" profit="30" serviseCost="65" delta="300" /> 
+<summary year="12" profit="30" serviseCost="70" delta="310" /> 
+</machine> 
+ 
+<machine yearOfProduction="1"> 
+<summary year="0" profit="90" serviseCost="20" delta="200" /> 
+<summary year="1" profit="85" serviseCost="20" delta="220" /> 
+<summary year="2" profit="80" serviseCost="25" delta="240" /> 
+<summary year="3" profit="75" serviseCost="25" delta="250" /> 
+<summary year="4" profit="70" serviseCost="30" delta="255" /> 
+<summary year="5" profit="70" serviseCost="30" delta="260" /> 
+<summary year="6" profit="70" serviseCost="35" delta="265" /> 
+<summary year="7" profit="60" serviseCost="40" delta="270" /> 
+<summary year="8" profit="60" serviseCost="45" delta="270" /> 
+<summary year="9" profit="60" serviseCost="50" delta="270" /> 
+</machine> 
+ 
+<machine yearOfProduction="2"> 
+<summary year="0" profit="100" serviseCost="15" delta="200" /> 
+<summary year="1" profit="90" serviseCost="20" delta="220" /> 
+<summary year="2" profit="80" serviseCost="20" delta="240" /> 
+<summary year="3" profit="75" serviseCost="25" delta="250" /> 
+<summary year="4" profit="70" serviseCost="25" delta="255" /> 
+<summary year="5" profit="65" serviseCost="30" delta="260" /> 
+<summary year="6" profit="65" serviseCost="30" delta="265" /> 
+<summary year="7" profit="65" serviseCost="35" delta="270" /> 
+<summary year="8" profit="65" serviseCost="35" delta="270" /> 
+</machine> 
+ 
+<machine yearOfProduction="3"> 
+<summary year="0" profit="110" serviseCost="15" delta="200" /> 
+<summary year="1" profit="105" serviseCost="15" delta="220" /> 
+<summary year="2" profit="100" serviseCost="20" delta="240" /> 
+<summary year="3" profit="95" serviseCost="20" delta="250" /> 
+<summary year="4" profit="90" serviseCost="25" delta="255" /> 
+<summary year="5" profit="80" serviseCost="25" delta="260" /> 
+<summary year="6" profit="70" serviseCost="30" delta="265" /> 
+<summary year="7" profit="60" serviseCost="35" delta="270" /> 
+</machine> 
+ 
+<machine yearOfProduction="4"> 
+<summary year="0" profit="115" serviseCost="15" delta="210" /> 
+<summary year="1" profit="110" serviseCost="15" delta="215" /> 
+<summary year="2" profit="100" serviseCost="20" delta="220" /> 
+<summary year="3" profit="90" serviseCost="20" delta="225" /> 
+<summary year="4" profit="80" serviseCost="25" delta="230" /> 
+<summary year="5" profit="70" serviseCost="25" delta="235" /> 
+<summary year="6" profit="60" serviseCost="30" delta="240" /> 
+</machine> 
+ 
+<machine yearOfProduction="5"> 
+<summary year="0" profit="120" serviseCost="10" delta="210" /> 
+<summary year="1" profit="115" serviseCost="10" delta="215" /> 
+<summary year="2" profit="115" serviseCost="15" delta="220" /> 
+<summary year="3" profit="110" serviseCost="15" delta="225" /> 
+<summary year="4" profit="105" serviseCost="20" delta="230" /> 
+<summary year="5" profit="100" serviseCost="20" delta="235" /> 
+</machine> 
+ 
+<machine yearOfproduction="6"> 
+<summary year="0" profit="125" serviseCost="10" delta="210" /> 
+<summary year="1" profit="120" serviseCost="10" delta="220" /> 
+<summary year="2" profit="110" serviseCost="10" delta="230" /> 
+<summary year="3" profit="105" serviseCost="15" delta="240" /> 
+<summary year="4" profit="110" serviseCost="15" delta="250" /> 
+</machine> 
+ 
+<machine yearOfProduction="7"> 
+<summary year="0" profit="135" serviseCost="10" delta="210" /> 
+<summary year="1" profit="125" serviseCost="10" delta="220" /> 
+<summary year="2" profit="110" serviseCost="10" delta="230" /> 
+<summary year="3" profit="105" serviseCost="10" delta="240" /> 
+</machine> 
+ 
+<machine yearOfProduction="8"> 
+<summary year="0" profit="140" serviseCost="5" delta="220" /> 
+<summary year="1" profit="135" serviseCost="10" delta="230" /> 
+<summary year="2" profit="125" serviseCost="10" delta="240" /> 
+</machine> 
+ 
+<machine yearOfProduction="9"> 
+<summary year="0" profit="150" serviseCost="5" delta="220" /> 
+<summary year="1" profit="140" serviseCost="10" delta="225" /> 
+</machine> 
+ 
+<machine yearOfProduction="10"> 
+<summary year="0" profit="155" serviseCost="5" delta="220" /> 
+</machine> 
+</machines> 
