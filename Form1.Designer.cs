@@ -45,6 +45,7 @@ namespace TPR
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.u_t = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -88,7 +89,7 @@ namespace TPR
             this.arr1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.arr1.Location = new System.Drawing.Point(30, 175);
             this.arr1.Name = "arr1";
-            this.arr1.Size = new System.Drawing.Size(812, 223);
+            this.arr1.Size = new System.Drawing.Size(896, 223);
             this.arr1.TabIndex = 7;
             this.arr1.Text = "";
             this.arr1.Visible = false;
@@ -122,7 +123,7 @@ namespace TPR
             this.arr2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.arr2.Location = new System.Drawing.Point(30, 175);
             this.arr2.Name = "arr2";
-            this.arr2.Size = new System.Drawing.Size(812, 223);
+            this.arr2.Size = new System.Drawing.Size(896, 223);
             this.arr2.TabIndex = 10;
             this.arr2.Text = "";
             this.arr2.Visible = false;
@@ -132,7 +133,7 @@ namespace TPR
             this.arr3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.arr3.Location = new System.Drawing.Point(30, 175);
             this.arr3.Name = "arr3";
-            this.arr3.Size = new System.Drawing.Size(812, 223);
+            this.arr3.Size = new System.Drawing.Size(896, 223);
             this.arr3.TabIndex = 14;
             this.arr3.Text = "";
             this.arr3.Visible = false;
@@ -199,12 +200,23 @@ namespace TPR
             this.u_t.Text = "Витрати на заміну в році від віку машини ";
             this.u_t.Visible = false;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(85, 550);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 18;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.HotTrack;
             this.ClientSize = new System.Drawing.Size(1006, 721);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.u_t);
             this.Controls.Add(this.arr3);
             this.Controls.Add(this.label5);
@@ -245,6 +257,7 @@ namespace TPR
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.Label u_t;
+        private System.Windows.Forms.Button button1;
     }
 }
 
