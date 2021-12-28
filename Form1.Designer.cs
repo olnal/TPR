@@ -55,10 +55,12 @@ namespace TPR
             this.year_mark = new System.Windows.Forms.DataGridView();
             this.Fi = new System.Windows.Forms.Label();
             this.Run = new System.Windows.Forms.Button();
+            this.lastResult = new System.Windows.Forms.DataGridView();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.x_ar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.w_ar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.year_mark)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lastResult)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -109,7 +111,7 @@ namespace TPR
             this.arr1.Location = new System.Drawing.Point(22, 142);
             this.arr1.Margin = new System.Windows.Forms.Padding(2);
             this.arr1.Name = "arr1";
-            this.arr1.Size = new System.Drawing.Size(673, 182);
+            this.arr1.Size = new System.Drawing.Size(680, 182);
             this.arr1.TabIndex = 7;
             this.arr1.Text = "";
             this.arr1.Visible = false;
@@ -146,7 +148,7 @@ namespace TPR
             this.arr2.Location = new System.Drawing.Point(22, 142);
             this.arr2.Margin = new System.Windows.Forms.Padding(2);
             this.arr2.Name = "arr2";
-            this.arr2.Size = new System.Drawing.Size(673, 182);
+            this.arr2.Size = new System.Drawing.Size(680, 115);
             this.arr2.TabIndex = 10;
             this.arr2.Text = "";
             this.arr2.Visible = false;
@@ -157,7 +159,7 @@ namespace TPR
             this.arr3.Location = new System.Drawing.Point(22, 142);
             this.arr3.Margin = new System.Windows.Forms.Padding(2);
             this.arr3.Name = "arr3";
-            this.arr3.Size = new System.Drawing.Size(673, 182);
+            this.arr3.Size = new System.Drawing.Size(680, 115);
             this.arr3.TabIndex = 14;
             this.arr3.Text = "";
             this.arr3.Visible = false;
@@ -258,7 +260,7 @@ namespace TPR
             this.x_ar.RowHeadersWidth = 50;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.x_ar.RowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.x_ar.Size = new System.Drawing.Size(673, 182);
+            this.x_ar.Size = new System.Drawing.Size(680, 115);
             this.x_ar.TabIndex = 19;
             this.x_ar.Visible = false;
             // 
@@ -272,7 +274,7 @@ namespace TPR
             this.w_ar.RowHeadersWidth = 50;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.w_ar.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            this.w_ar.Size = new System.Drawing.Size(673, 182);
+            this.w_ar.Size = new System.Drawing.Size(680, 115);
             this.w_ar.TabIndex = 20;
             this.w_ar.Visible = false;
             // 
@@ -295,7 +297,7 @@ namespace TPR
             this.year_mark.Location = new System.Drawing.Point(20, 143);
             this.year_mark.Name = "year_mark";
             this.year_mark.RowHeadersVisible = false;
-            this.year_mark.Size = new System.Drawing.Size(675, 138);
+            this.year_mark.Size = new System.Drawing.Size(680, 115);
             this.year_mark.TabIndex = 22;
             this.year_mark.Visible = false;
             // 
@@ -323,12 +325,24 @@ namespace TPR
             this.Run.UseVisualStyleBackColor = true;
             this.Run.Click += new System.EventHandler(this.Run_Click);
             // 
+            // lastResult
+            // 
+            this.lastResult.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.lastResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.lastResult.Location = new System.Drawing.Point(23, 380);
+            this.lastResult.Name = "lastResult";
+            this.lastResult.Size = new System.Drawing.Size(680, 115);
+            this.lastResult.TabIndex = 25;
+            this.lastResult.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.HotTrack;
             this.ClientSize = new System.Drawing.Size(754, 586);
+            this.Controls.Add(this.lastResult);
             this.Controls.Add(this.Run);
             this.Controls.Add(this.Fi);
             this.Controls.Add(this.year_mark);
@@ -356,6 +370,7 @@ namespace TPR
             ((System.ComponentModel.ISupportInitialize)(this.x_ar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.w_ar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.year_mark)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lastResult)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -387,6 +402,7 @@ namespace TPR
         private System.Windows.Forms.DataGridView year_mark;
         private System.Windows.Forms.Label Fi;
         private System.Windows.Forms.Button Run;
+        private System.Windows.Forms.DataGridView lastResult;
     }
 }
 
