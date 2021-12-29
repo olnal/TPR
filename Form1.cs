@@ -118,12 +118,12 @@ namespace TPR
                     if (i == k)
                     {
                         safe_profit = r[i, j] - u[i, j];
-                        change_profit = r[i, 0] - u[i, 0] - c[i, 0];
+                        change_profit = r[i, 0] - u[i, 0] - c[i, j];
                     }
                     else
                     {
                         safe_profit = r[i, j] - u[i, j] + w[i + 1, j + 1];
-                        change_profit = r[i, 0] - u[i, 0] - c[i, 0] + w[i + 1, 1];
+                        change_profit = r[i, 0] - u[i, 0] - c[i, j] + w[i + 1, 1];
                     }
                     if (safe_profit >= change_profit)
                     {
@@ -404,14 +404,14 @@ namespace TPR
                 {
                     if (x[i, j] == 's')
                     {
-                        x_ar.Rows[i].Cells[j].Value = "+";
+                        x_ar.Rows[i].Cells[j].Value = "С";
                         x_ar.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(0, 255, 0);
                     }
                     else
                     {
                         if (x[i, j] == 'c')
                         {
-                            x_ar.Rows[i].Cells[j].Value = "-";
+                            x_ar.Rows[i].Cells[j].Value = "К";
                             x_ar.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(255, 0, 0);
                         }
                     }

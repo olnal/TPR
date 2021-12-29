@@ -71,9 +71,9 @@ namespace TPR
             this.label1.Location = new System.Drawing.Point(24, 53);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(245, 26);
+            this.label1.Size = new System.Drawing.Size(213, 26);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Введіть кількість років";
+            this.label1.Text = "Введіть вік машини";
             // 
             // n
             // 
