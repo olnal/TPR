@@ -12,17 +12,18 @@ using System.Xml;
 
 namespace TPR
 {
+
     public partial class Form1 : Form
     {
+        static readonly int k=10, max=k+3;
         public Form1()
         {
             InitializeComponent();
         }
 
-        private int[][,] Arr3Create()
+        private int[][,] DataCreate()
         {
-            int i = 0, j = 0, k = 0;
-
+            int i ,j = 0, f;
             int[][,] ArrYear = new int[11][,];
             XmlDocument xDoc = new XmlDocument();
             xDoc.Load("mydata.xml");
@@ -47,22 +48,22 @@ namespace TPR
                     foreach (XmlNode childnode in xnode.ChildNodes)
                     {
                         XmlNode atrYear = childnode.Attributes.GetNamedItem("year");
-                        k = Int32.Parse(atrYear.Value);
+                        f = Int32.Parse(atrYear.Value);
                         foreach (XmlNode child in childnode.ChildNodes)
                         {
                             if (child.Name == "sum")
                             {
-                                ArrYear[i][j, k] = Convert.ToInt32(child.InnerText);
+                                ArrYear[i][j, f] = Convert.ToInt32(child.InnerText);
                                 j++;
                             }
                             if (child.Name == "serviseCost")
                             {
-                                ArrYear[i][j, k] = Convert.ToInt32(child.InnerText);
+                                ArrYear[i][j, f] = Convert.ToInt32(child.InnerText);
                                 j++;
                             }
                             if (child.Name == "changeCost")
                             {
-                                ArrYear[i][j, k] = Convert.ToInt32(child.InnerText);
+                                ArrYear[i][j, f] = Convert.ToInt32(child.InnerText);
                                 j = 0;
                             }
                         }
@@ -73,23 +74,19 @@ namespace TPR
 
         }
 
-        private int Max()
-        {
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            return 13;
-        }
 
-        private int[,] ResCreate(int[][,] data, int max, int n, int r)
+
+        private int[,] ResCreate(int[][,] data, int max, int r)
         {
-            int[,] result = new int[n + 1, max];
-            for (int i = 0; i <= n; i++)
+            int[,] result = new int[k + 1, max];
+            for (int i = 0; i <= k; i++)
             {
                 for (int j = 0; j < max; j++)
                 {
                     result[i, j] = -1;
                 }
             }
-            for (int i = 0; i <= n; i++)
+            for (int i = 0; i <= k; i++)
             {
                 result[i, i + 2] = data[0][r, i + 2];
                 for (int j = 0; j < i; j++)
@@ -100,7 +97,7 @@ namespace TPR
             return result;
         }
 
-        private char[,] X_arr(int[,] r, int[,] u, int[,] c, int max, int k, ref int[,] w, ref char[,] x)
+        private char[,] Desision(int[,] r, int[,] u, int[,] c, int max, int k, ref int[,] w, ref char[,] x)
         {
             int safe_profit, change_profit;
             for (int i = 0; i > k + 1; i++)
@@ -160,7 +157,7 @@ namespace TPR
             return x;
         }
 
-        private string[] ShowStrategy(char[,] x, int k)
+        private string[] CreateStrategy(char[,] x)
         {
             string[] result = new string[k];
             int h = 3;
@@ -184,7 +181,7 @@ namespace TPR
             return result;
         }
 
-        private void ToFile(string[] str, int k)
+        private void ToFile(string[] str)
         {
             string path = "result.txt";
             using (StreamWriter sw = File.CreateText(path))
@@ -208,10 +205,8 @@ namespace TPR
             year_mark.Visible = false;
             Fi.Visible = false;
             lastResult.Visible = false;
-            int k = 10;
-            int[][,] data = Arr3Create();
-            int max = Max();
-            int[,] data_res = ResCreate(data, max, k, 0);
+            int[][,] data = DataCreate();
+            int[,] data_res = ResCreate(data, max, 0);
             r_ar.RowCount = k;
             r_ar.ColumnCount = max;
             for (int i = 0; i < k; i++)
@@ -245,10 +240,8 @@ namespace TPR
             year_mark.Visible = false;
             Fi.Visible = false;
             lastResult.Visible = false;
-            int k = 10;
-            int[][,] data = Arr3Create();
-            int max = Max();
-            int[,] data_res = ResCreate(data, max, k, 1);
+            int[][,] data = DataCreate();
+            int[,] data_res = ResCreate(data, max, 1);
             u_ar.RowCount = k;
             u_ar.ColumnCount = max;
             for (int i = 0; i < k; i++)
@@ -282,10 +275,8 @@ namespace TPR
             year_mark.Visible = false;
             Fi.Visible = false;
             lastResult.Visible = false;
-            int k = 10;
-            int[][,] data = Arr3Create();
-            int max = Max();
-            int[,] data_res = ResCreate(data, max, k, 2);
+            int[][,] data = DataCreate();
+            int[,] data_res = ResCreate(data, max, 2);
             c_ar.RowCount = k;
             c_ar.ColumnCount = max;
             for (int i = 0; i < k; i++)
@@ -322,15 +313,13 @@ namespace TPR
             year_mark.Visible = false;
             Fi.Visible = false;
             lastResult.Visible = false;
-            int k = 10;
-            int[][,] data = Arr3Create();
-            int max = Max();
-            int[,] r = ResCreate(data, max, k, 0);
-            int[,] u = ResCreate(data, max, k, 1);
-            int[,] c = ResCreate(data, max, k, 2);
+            int[][,] data = DataCreate();
+            int[,] r = ResCreate(data, max, 0);
+            int[,] u = ResCreate(data, max, 1);
+            int[,] c = ResCreate(data, max, 2);
             int[,] w = new int[k + 1, max];
             char[,] x = new char[k + 1, max];
-            x = X_arr(r, u, c, max, k, ref w, ref x);
+            x = Desision(r, u, c, max, k, ref w, ref x);
             x_ar.RowCount = k;
             x_ar.ColumnCount = max;
             for (int i = 0; i < k; i++)
@@ -380,15 +369,13 @@ namespace TPR
             year_mark.Visible = true;
             Fi.Visible = true;
             lastResult.Visible = true;
-            int k = 10;
-            int[][,] data = Arr3Create();
-            int max = Max();
-            int[,] r = ResCreate(data, max, k, 0);
-            int[,] u = ResCreate(data, max, k, 1);
-            int[,] c = ResCreate(data, max, k, 2);
+            int[][,] data = DataCreate();
+            int[,] r = ResCreate(data, max, 0);
+            int[,] u = ResCreate(data, max, 1);
+            int[,] c = ResCreate(data, max, 2);
             int[,] w = new int[k + 1, max];
             char[,] x = new char[k + 1, max];
-            x = X_arr(r, u, c, max, k, ref w, ref x);
+            x = Desision(r, u, c, max, k, ref w, ref x);
             int mark = w[1, 3];
             max_val.Text = "Максимальний прибуток становить - " + mark;
             int[,] w1 = new int[k, max];
@@ -402,7 +389,7 @@ namespace TPR
                 }
             }
             string[] strat = new string[k];
-            strat = ShowStrategy(x1, k);
+            strat = CreateStrategy(x1);
             if (k % 2 == 0)
             {
                 year_mark.RowCount = k / 2;
@@ -428,7 +415,7 @@ namespace TPR
 
 
             //запис результатів до файлу
-            ToFile(strat, k);
+            ToFile(strat);
 
             //обчислення таблиці F(i)
 
@@ -464,7 +451,5 @@ namespace TPR
             }
             lastResult.Location = new System.Drawing.Point(26, Fi.Location.Y + Fi.Height + 30);
         }
-
-        
     }
 }

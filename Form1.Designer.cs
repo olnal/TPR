@@ -54,6 +54,7 @@ namespace TPR
             this.u_ar = new System.Windows.Forms.DataGridView();
             this.c_ar = new System.Windows.Forms.DataGridView();
             this.Fi = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             n = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.x_ar)).BeginInit();
@@ -69,7 +70,7 @@ namespace TPR
             n.AutoSize = true;
             n.BackColor = System.Drawing.Color.White;
             n.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            n.Location = new System.Drawing.Point(446, 62);
+            n.Location = new System.Drawing.Point(361, 59);
             n.Name = "n";
             n.Size = new System.Drawing.Size(47, 32);
             n.TabIndex = 27;
@@ -82,9 +83,9 @@ namespace TPR
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label1.Location = new System.Drawing.Point(25, 62);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(381, 32);
+            this.label1.Size = new System.Drawing.Size(311, 32);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Введіть вік машини";
+            this.label1.Text = "Розрахунковий період";
             // 
             // l
             // 
@@ -144,7 +145,7 @@ namespace TPR
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1005, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1006, 28);
             this.menuStrip1.TabIndex = 16;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -254,7 +255,7 @@ namespace TPR
             this.Run.Name = "Run";
             this.Run.Size = new System.Drawing.Size(216, 39);
             this.Run.TabIndex = 24;
-            this.Run.Text = "Розрахувати";
+            this.Run.Text = "Обчислити";
             this.Run.UseVisualStyleBackColor = true;
             this.Run.Click += new System.EventHandler(this.Run_Click);
             // 
@@ -308,7 +309,7 @@ namespace TPR
             this.c_ar.Size = new System.Drawing.Size(907, 142);
             this.c_ar.TabIndex = 19;
             this.c_ar.Visible = false;
-                        // 
+            // 
             // Fi
             // 
             this.Fi.AutoSize = true;
@@ -322,13 +323,26 @@ namespace TPR
             this.Fi.Text = "Прибуток від експлуатації і заміни обладнання";
             this.Fi.Visible = false;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label2.Location = new System.Drawing.Point(427, 62);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(83, 32);
+            this.label2.TabIndex = 28;
+            this.label2.Text = "років";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.ClientSize = new System.Drawing.Size(1005, 721);
+            this.ClientSize = new System.Drawing.Size(1006, 721);
+            this.Controls.Add(this.label2);
             this.Controls.Add(n);
             this.Controls.Add(this.c_ar);
             this.Controls.Add(this.u_ar);
@@ -349,8 +363,11 @@ namespace TPR
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximumSize = new System.Drawing.Size(1024, 768);
+            this.MinimumSize = new System.Drawing.Size(1024, 768);
             this.Name = "Form1";
             this.Text = "Прийняття рішення";
+            this.Enter += new System.EventHandler(this.Run_Click);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.x_ar)).EndInit();
@@ -389,6 +406,7 @@ namespace TPR
         private System.Windows.Forms.DataGridView c_ar;
         private System.Windows.Forms.ToolStripMenuItem Menu_2;
         private System.Windows.Forms.Label Fi;
+        private System.Windows.Forms.Label label2;
     }
 }
 
