@@ -15,15 +15,16 @@ namespace TPR
 
     public partial class Form1 : Form
     {
-        static readonly int k=10, max=k+3;
+        const byte old = 3, period = 10;
+        static readonly byte maxOld = period + old;
         public Form1()
         {
             InitializeComponent();
         }
-
-        private int[][,] DataCreate()
+        //read data from file
+        private int[][,] DataFromXML()
         {
-            int i ,j = 0, f;
+            int i, j = 0, f;
             int[][,] ArrYear = new int[11][,];
             XmlDocument xDoc = new XmlDocument();
             xDoc.Load("mydata.xml");
@@ -37,12 +38,12 @@ namespace TPR
                     if (Int32.Parse(attrYearPro.Value) == -1)
                     {
                         i = 0;
-                        ArrYear[i] = new int[3, 12 - Int32.Parse(attrYearPro.Value)];
+                        ArrYear[i] = new int[old, maxOld - 1 - Int32.Parse(attrYearPro.Value)];
                     }
                     else
                     {
                         i = Int32.Parse(attrYearPro.Value);
-                        ArrYear[i] = new int[3, 11 - Int32.Parse(attrYearPro.Value)];
+                        ArrYear[i] = new int[old, maxOld - 2 - Int32.Parse(attrYearPro.Value)];
                     }
 
                     foreach (XmlNode childnode in xnode.ChildNodes)
@@ -71,97 +72,98 @@ namespace TPR
                 }
             }
             return ArrYear;
-
         }
-
-
-
-        private int[,] ResCreate(int[][,] data, int max, int r)
+        //Create arrey functiot r,u or c (type 0, 1 or 2)
+        private int[,] ArrCreate(int[][,] data, int type)
         {
-            int[,] result = new int[k + 1, max];
-            for (int i = 0; i <= k; i++)
+            int[,] result = new int[period + 1, maxOld];
+            for (int i = 0; i <= period; i++)
             {
-                for (int j = 0; j < max; j++)
+                for (int j = 0; j < maxOld; j++)
                 {
                     result[i, j] = -1;
                 }
             }
-            for (int i = 0; i <= k; i++)
+            for (int i = 0; i <= period; i++)
             {
-                result[i, i + 2] = data[0][r, i + 2];
+                result[i, i + 2] = data[0][type, i + 2];
                 for (int j = 0; j < i; j++)
                 {
-                    result[i, j] = data[i - j][r, j];
+                    result[i, j] = data[i - j][type, j];
                 }
             }
             return result;
         }
-
-        private char[,] Desision(int[,] r, int[,] u, int[,] c, int max, int k, ref int[,] w, ref char[,] x)
+        //Create array desisison for begining 
+        private void ArraysDesisison(ref int[,] w, ref char[,] x)
         {
-            int safe_profit, change_profit;
-            for (int i = 0; i > k + 1; i++)
+            for (int i = 0; i > period + 1; i++)
             {
-                for (int j = 0; j < max; j++)
+                for (int j = 0; j < maxOld; j++)
                 {
                     w[i, j] = 1;
                     x[i, j] = 'f';
                 }
             }
-            for (int i = k; i >= 0; i--)
+        }
+        //Create desisison
+        private void Desision(int[,] r, int[,] u, int[,] c, ref int[,] w, ref char[,] x)
+        {
+            int safe, change;
+            ArraysDesisison(ref w, ref x);
+            for (int i = period; i >= 0; i--)
             {
                 for (int j = 0; j < i; j++)
                 {
-                    if (i == k)
+                    if (i == period)
                     {
-                        safe_profit = r[i, j] - u[i, j];
-                        change_profit = r[i, 0] - u[i, 0] - c[i, j];
+                        safe = r[i, j] - u[i, j];
+                        change = r[i, 0] - u[i, 0] - c[i, j];
                     }
                     else
                     {
-                        safe_profit = r[i, j] - u[i, j] + w[i + 1, j + 1];
-                        change_profit = r[i, 0] - u[i, 0] - c[i, j] + w[i + 1, 1];
+                        safe = r[i, j] - u[i, j] + w[i + 1, j + 1];
+                        change = r[i, 0] - u[i, 0] - c[i, j] + w[i + 1, 1];
                     }
-                    if (safe_profit >= change_profit)
+                    if (safe >= change)
                     {
-                        w[i, j] = safe_profit;
+                        w[i, j] = safe;
                         x[i, j] = 's';
                     }
                     else
                     {
-                        w[i, j] = change_profit;
+                        w[i, j] = change;
                         x[i, j] = 'c';
                     }
                 }
-                if (i == k)
+                if (i == period)
                 {
-                    safe_profit = r[i, i + 2] - u[i, i + 2];
-                    change_profit = r[i, 0] - u[i, 0] - c[i, i + 2];
+                    safe = r[i, i + 2] - u[i, i + 2];
+                    change = r[i, 0] - u[i, 0] - c[i, i + 2];
                 }
                 else
                 {
-                    safe_profit = r[i, i + 2] - u[i, i + 2] + w[i + 1, i + 3];
-                    change_profit = r[i, 0] - u[i, 0] - c[i, i + 2] + w[i + 1, 1];
+                    safe = r[i, i + 2] - u[i, i + 2] + w[i + 1, i + 3];
+                    change = r[i, 0] - u[i, 0] - c[i, i + 2] + w[i + 1, 1];
                 }
-                if (safe_profit >= change_profit)
+                if (safe >= change)
                 {
-                    w[i, i + 2] = safe_profit;
+                    w[i, i + 2] = safe;
                     x[i, i + 2] = 's';
                 }
                 else
                 {
-                    w[i, i + 2] = change_profit;
+                    w[i, i + 2] = change;
                     x[i, i + 2] = 'c';
                 }
             }
-            return x;
         }
-
+        //Create strategy
         private string[] CreateStrategy(char[,] x)
         {
-            string[] result = new string[k];
+            string[] result = new string[period];
             int h = 3;
-            for (int i = 0; i < k; i++)
+            for (int i = 0; i < period; i++)
             {
                 if (x[i, h] == 'c')
                 {
@@ -175,281 +177,834 @@ namespace TPR
                         result[i] = (i + 1).ToString() + "-й рік: варто залишити поточне обладнання";
                         h++;
                     }
-
                 }
             }
             return result;
         }
-
+        //save result to File result.txt
         private void ToFile(string[] str)
         {
             string path = "result.txt";
             using (StreamWriter sw = File.CreateText(path))
             {
-                for (int i = 0; i < k; i++)
+                for (int i = 0; i < period; i++)
                 {
                     sw.WriteLine(str[i]);
                 }
             }
         }
-
-        private void Menu11(object sender, EventArgs e)
+        //View initial data function r
+        private void RInitialData(object sender, EventArgs e)
         {
-            r_t.Visible = true;
-            s_t.Visible = false;
-            u_t.Visible = false;
-            r_ar.Visible = true;
-            u_ar.Visible = false;
-            c_ar.Visible = false;
-            max_val.Visible = false;
-            year_mark.Visible = false;
-            Fi.Visible = false;
-            lastResult.Visible = false;
-            int[][,] data = DataCreate();
-            int[,] data_res = ResCreate(data, max, 0);
-            r_ar.RowCount = k;
-            r_ar.ColumnCount = max;
-            for (int i = 0; i < k; i++)
+            r_label.Visible = true;            
+            u_label.Visible = false;
+            c_label.Visible = false;
+            r_table.Visible = true;
+            u_table.Visible = false;
+            c_table.Visible = false;
+            max_val_result.Visible = false;
+            desisison_table.Visible = false;
+            strategy_table.Visible = false;
+            data_result_label.Visible = false;
+            data_result_table.Visible = false;
+            int[,] rArr = ArrCreate(DataFromXML(), 0);
+            r_table.RowCount = period;
+            r_table.ColumnCount = maxOld;
+            for (int i = 0; i < period; i++)
             {
-                r_ar.Rows[i].HeaderCell.Value = (i + 1).ToString();
+                r_table.Rows[i].HeaderCell.Value = (i + 1).ToString();
             }
-            for (int j = 0; j < max; j++)
+            for (int j = 0; j < maxOld; j++)
             {
-                r_ar.Columns[j].HeaderText = Convert.ToString(j);
+                r_table.Columns[j].HeaderText = Convert.ToString(j);
             }
-            for (int i = 0; i < k; i++)
-                for (int j = 0; j < max; j++)
+            for (int i = 0; i < period; i++)
+                for (int j = 0; j < maxOld; j++)
                 {
-                    if (data_res[i + 1, j] != -1)
+                    if (rArr[i + 1, j] != -1)
                     {
-                        r_ar.Rows[i].Cells[j].Value = data_res[i + 1, j];
+                        r_table.Rows[i].Cells[j].Value = rArr[i + 1, j];
                     }
                 }
-            r_ar.Height = r_ar.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + r_ar.ColumnHeadersHeight;
+            r_table.Height = r_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + r_table.ColumnHeadersHeight;
         }
-
-        private void Menu12(object sender, EventArgs e)
+        //View initial data function u
+        private void UInitialData(object sender, EventArgs e)
         {
-            r_t.Visible = false;
-            s_t.Visible = true;
-            u_t.Visible = false;
-            r_ar.Visible = false;
-            u_ar.Visible = true;
-            c_ar.Visible = false;
-            max_val.Visible = false;
-            year_mark.Visible = false;
-            Fi.Visible = false;
-            lastResult.Visible = false;
-            int[][,] data = DataCreate();
-            int[,] data_res = ResCreate(data, max, 1);
-            u_ar.RowCount = k;
-            u_ar.ColumnCount = max;
-            for (int i = 0; i < k; i++)
+            r_label.Visible = false;
+            c_label.Visible = false;
+            u_label.Visible = true;
+            r_table.Visible = false;
+            u_table.Visible = true;
+            c_table.Visible = false;
+            max_val_result.Visible = false;
+            desisison_table.Visible = false;
+            strategy_table.Visible = false;
+            data_result_label.Visible = false;
+            data_result_table.Visible = false;
+            int[,] uArr = ArrCreate(DataFromXML(), 1);
+            u_table.RowCount = period;
+            u_table.ColumnCount = maxOld;
+            for (int i = 0; i < period; i++)
             {
-                u_ar.Rows[i].HeaderCell.Value = (i + 1).ToString();
+                u_table.Rows[i].HeaderCell.Value = (i + 1).ToString();
             }
-            for (int j = 0; j < max; j++)
+            for (int j = 0; j < maxOld; j++)
             {
-                u_ar.Columns[j].HeaderText = Convert.ToString(j);
+                u_table.Columns[j].HeaderText = Convert.ToString(j);
             }
-            for (int i = 0; i < k; i++)
-                for (int j = 0; j < max; j++)
+            for (int i = 0; i < period; i++)
+                for (int j = 0; j < maxOld; j++)
                 {
-                    if (data_res[i + 1, j] != -1)
+                    if (uArr[i + 1, j] != -1)
                     {
-                        u_ar.Rows[i].Cells[j].Value = data_res[i + 1, j];
+                        u_table.Rows[i].Cells[j].Value = uArr[i + 1, j];
                     }
                 }
-            u_ar.Height = u_ar.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + u_ar.ColumnHeadersHeight;
+            u_table.Height = u_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + u_table.ColumnHeadersHeight;
         }
-
-        private void Menu13(object sender, EventArgs e)
+        //View initial data function c
+        private void CInitialData(object sender, EventArgs e)
         {
-            r_t.Visible = false;
-            s_t.Visible = false;
-            u_t.Visible = true;
-            r_ar.Visible = false;
-            u_ar.Visible = false;
-            c_ar.Visible = true;
-            max_val.Visible = false;
-            year_mark.Visible = false;
-            Fi.Visible = false;
-            lastResult.Visible = false;
-            int[][,] data = DataCreate();
-            int[,] data_res = ResCreate(data, max, 2);
-            c_ar.RowCount = k;
-            c_ar.ColumnCount = max;
-            for (int i = 0; i < k; i++)
+            r_label.Visible = false;
+            c_label.Visible = true;
+            u_label.Visible = false;
+            r_table.Visible = false;
+            u_table.Visible = false;
+            c_table.Visible = true;
+            desisison_table.Visible = false;
+            max_val_result.Visible = false;
+            strategy_table.Visible = false;
+            data_result_label.Visible = false;
+            data_result_table.Visible = false;
+            int[,] cArr = ArrCreate(DataFromXML(), 2);
+            c_table.RowCount = period;
+            c_table.ColumnCount = maxOld;
+            for (int i = 0; i < period; i++)
             {
-                c_ar.Rows[i].HeaderCell.Value = (i + 1).ToString();
+                c_table.Rows[i].HeaderCell.Value = (i + 1).ToString();
             }
-            for (int j = 0; j < max; j++)
+            for (int j = 0; j < maxOld; j++)
             {
-                c_ar.Columns[j].HeaderText = Convert.ToString(j);
+                c_table.Columns[j].HeaderText = Convert.ToString(j);
             }
-            for (int i = 0; i < k; i++)
-                for (int j = 0; j < max; j++)
+            for (int i = 0; i < period; i++)
+                for (int j = 0; j < maxOld; j++)
                 {
-                    if (data_res[i + 1, j] != -1)
+                    if (cArr[i + 1, j] != -1)
                     {
-                        c_ar.Rows[i].Cells[j].Value = data_res[i + 1, j];
+                        c_table.Rows[i].Cells[j].Value = cArr[i + 1, j];
                     }
                 }
-            c_ar.Height = c_ar.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + c_ar.ColumnHeadersHeight;
+            c_table.Height = c_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + c_table.ColumnHeadersHeight;
         }
-
-
-
-        private void Menu2(object sender, EventArgs e)
+        //Desision making C or K
+        private void DesisionMaking(object sender, EventArgs e)
         {
-            r_t.Visible = false;
-            s_t.Visible = false;
-            u_t.Visible = false;
-            x_ar.Visible = true;
-            r_ar.Visible = false;
-            u_ar.Visible = false;
-            c_ar.Visible = false;
-            max_val.Visible = false;
-            year_mark.Visible = false;
-            Fi.Visible = false;
-            lastResult.Visible = false;
-            int[][,] data = DataCreate();
-            int[,] r = ResCreate(data, max, 0);
-            int[,] u = ResCreate(data, max, 1);
-            int[,] c = ResCreate(data, max, 2);
-            int[,] w = new int[k + 1, max];
-            char[,] x = new char[k + 1, max];
-            x = Desision(r, u, c, max, k, ref w, ref x);
-            x_ar.RowCount = k;
-            x_ar.ColumnCount = max;
-            for (int i = 0; i < k; i++)
+            r_label.Visible = false;
+            c_label.Visible = false;
+            u_label.Visible = false;
+            r_table.Visible = false;
+            u_table.Visible = false;
+            c_table.Visible = false;
+            max_val_result.Visible = false;
+            desisison_table.Visible = true;
+            strategy_table.Visible = false;
+            data_result_label.Visible = false;
+            data_result_table.Visible = false;
+            int[,] r = ArrCreate(DataFromXML(), 0);
+            int[,] u = ArrCreate(DataFromXML(), 1);
+            int[,] c = ArrCreate(DataFromXML(), 2);
+            int[,] valDesisison = new int[period + 1, maxOld];
+            char[,] charDesision = new char[period + 1, maxOld];
+            Desision(r, u, c, ref valDesisison, ref charDesision);
+            desisison_table.RowCount = period;
+            desisison_table.ColumnCount = maxOld;
+            for (int i = 0; i < period; i++)
             {
-                x_ar.Rows[i].HeaderCell.Value = (i + 1).ToString();
+                desisison_table.Rows[i].HeaderCell.Value = (i + 1).ToString();
             }
-            for (int j = 0; j < max; j++)
+            for (int j = 0; j < maxOld; j++)
             {
-                x_ar.Columns[j].HeaderText = Convert.ToString(j);
+                desisison_table.Columns[j].HeaderText = Convert.ToString(j);
             }
-            for (int i = 0; i < k; i++)
-                for (int j = 0; j < max; j++)
+            for (int i = 0; i < period; i++)
+                for (int j = 0; j < maxOld; j++)
                 {
-                    if (x[i + 1, j] == 's')
+                    if (charDesision[i + 1, j] == 's')
                     {
-                        x_ar.Rows[i].Cells[j].Value = "C";
-                        x_ar.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(0, 255, 0);
+                        desisison_table.Rows[i].Cells[j].Value = "C";
+                        desisison_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(0, 255, 0);
                     }
                     else
                     {
-                        if (x[i + 1, j] == 'c')
+                        if (charDesision[i + 1, j] == 'c')
                         {
-                            x_ar.Rows[i].Cells[j].Value = "K";
-                            x_ar.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(255, 0, 0);
+                            desisison_table.Rows[i].Cells[j].Value = "K";
+                            desisison_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(255, 0, 0);
                         }
                     }
                 }
-            x_ar.Height = x_ar.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + x_ar.ColumnHeadersHeight;
+            desisison_table.Height = desisison_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + desisison_table.ColumnHeadersHeight;
         }
-
-        private void MenuClose_Click(object sender, EventArgs e)
+        //data analysis
+        private void LessC_Click(object sender, EventArgs e)
         {
-            Close();
-        }
-
-        private void Run_Click(object sender, EventArgs e)
-        {
-
-            r_t.Visible = false;
-            s_t.Visible = false;
-            u_t.Visible = false;
-            r_ar.Visible = false;
-            u_ar.Visible = false;
-            c_ar.Visible = false;
-            x_ar.Visible = false;
-            max_val.Visible = true;
-            year_mark.Visible = true;
-            Fi.Visible = true;
-            lastResult.Visible = true;
-            int[][,] data = DataCreate();
-            int[,] r = ResCreate(data, max, 0);
-            int[,] u = ResCreate(data, max, 1);
-            int[,] c = ResCreate(data, max, 2);
-            int[,] w = new int[k + 1, max];
-            char[,] x = new char[k + 1, max];
-            x = Desision(r, u, c, max, k, ref w, ref x);
-            int mark = w[1, 3];
-            max_val.Text = "Максимальний прибуток становить - " + mark;
-            int[,] w1 = new int[k, max];
-            char[,] x1 = new char[k, max];
-            for (int i = 0; i < k; i++)
+            r_label.Visible = false;
+            c_label.Visible = false;
+            u_label.Visible = false;
+            r_table.Visible = false;
+            u_table.Visible = false;
+            c_table.Visible = false;
+            desisison_table.Visible = false;
+            max_val_result.Visible = true;
+            strategy_table.Visible = true;
+            data_result_label.Visible = true;
+            data_result_table.Visible = true;
+            int[,] r = ArrCreate(DataFromXML(), 0);
+            int[,] u = ArrCreate(DataFromXML(), 1);
+            int[,] c = ArrCreate(DataFromXML(), 2);
+            for (int i = 0; i < period; i++)
             {
-                for (int j = 0; j < max; j++)
+                for (int j = 0; j < maxOld; j++)
+                {
+                    if (i % 2 == 0) c[i, j] = c[i, j] - 100;
+                }
+            }
+            int[,] w = new int[period + 1, maxOld];
+            char[,] x = new char[period + 1, maxOld];
+            Desision(r, u, c, ref w, ref x);
+            int mark = w[1, 3];
+            max_val_result.Text = "Максимальний прибуток становить - " + mark;
+            int[,] w1 = new int[period, maxOld];
+            char[,] x1 = new char[period, maxOld];
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
                 {
                     w1[i, j] = w[i + 1, j];
                     x1[i, j] = x[i + 1, j];
                 }
             }
-            string[] strat = new string[k];
-            strat = CreateStrategy(x1);
-            if (k % 2 == 0)
+            string[] strat = CreateStrategy(x1);
+            if (period % 2 == 0)
             {
-                year_mark.RowCount = k / 2;
+                strategy_table.RowCount = period / 2;
             }
             else
             {
-                year_mark.RowCount = k / 2 + 1;
+                strategy_table.RowCount = period / 2 + 1;
             }
-            year_mark.ColumnCount = 2;
-            for (int i = 0; i < k; i++)
+            strategy_table.ColumnCount = 2;
+            for (int i = 0; i < period; i++)
             {
-                if (i >= k / 2)
+                if (i >= period / 2)
                 {
-                    year_mark.Rows[i - k / 2].Cells[1].Value = strat[i];
+                    strategy_table.Rows[i - period / 2].Cells[1].Value = strat[i];
                 }
                 else
                 {
-                    year_mark.Rows[i].Cells[0].Value = strat[i];
+                    strategy_table.Rows[i].Cells[0].Value = strat[i];
                 }
             }
-            year_mark.Height = year_mark.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
-            Fi.Location = new System.Drawing.Point(26, year_mark.Location.Y + year_mark.Height + 30);
-
-
-            //запис результатів до файлу
-            ToFile(strat);
-
-            //обчислення таблиці F(i)
-
-            lastResult.RowCount = k;
-            lastResult.ColumnCount = max;
-            for (int i = 0; i < k; i++)
+            strategy_table.Height = strategy_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
+            data_result_label.Location = new System.Drawing.Point(26, strategy_table.Location.Y + strategy_table.Height + 30);
+            data_result_table.RowCount = period;
+            data_result_table.ColumnCount = maxOld;
+            for (int i = 0; i < period; i++)
             {
-                lastResult.Rows[i].HeaderCell.Value = (i + 1).ToString();
+                data_result_table.Rows[i].HeaderCell.Value = (i + 1).ToString();
             }
-            for (int j = 0; j < max; j++)
+            for (int j = 0; j < maxOld; j++)
             {
-                lastResult.Columns[j].HeaderText = Convert.ToString(j);
+                data_result_table.Columns[j].HeaderText = Convert.ToString(j);
             }
-            lastResult.Height = lastResult.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + lastResult.ColumnHeadersHeight;
-            for (int i = 0; i < k; i++)
+            data_result_table.Height = data_result_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + data_result_table.ColumnHeadersHeight;
+            for (int i = 0; i < period; i++)
             {
-                for (int j = 0; j < max; j++)
+                for (int j = 0; j < maxOld; j++)
                 {
                     if (x[i + 1, j] == 's')
                     {
-                        lastResult.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(0, 255, 0);
-                        lastResult.Rows[i].Cells[j].Value = w[i + 1, j];
+                        data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(0, 255, 0);
+                        data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
                     }
                     else
                     {
                         if (x[i + 1, j] == 'c')
                         {
-                            lastResult.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(255, 0, 0);
-                            lastResult.Rows[i].Cells[j].Value = w[i + 1, j];
+                            data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(255, 0, 0);
+                            data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
                         }
                     }
                 }
             }
-            lastResult.Location = new System.Drawing.Point(26, Fi.Location.Y + Fi.Height + 30);
+            data_result_table.Location = new System.Drawing.Point(26, data_result_label.Location.Y + data_result_label.Height + 30);
+        }
+
+        private void GreaterC_Click(object sender, EventArgs e)
+        {
+            r_label.Visible = false;
+            c_label.Visible = false;
+            u_label.Visible = false;
+            r_table.Visible = false;
+            u_table.Visible = false;
+            c_table.Visible = false;
+            desisison_table.Visible = false;
+            max_val_result.Visible = true;
+            strategy_table.Visible = true;
+            data_result_label.Visible = true;
+            data_result_table.Visible = true;
+            int[,] r = ArrCreate(DataFromXML(), 0);
+            int[,] u = ArrCreate(DataFromXML(), 1);
+            int[,] c = ArrCreate(DataFromXML(), 2);
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    c[i, j] = c[i, j] + 50;
+                }
+            }
+            int[,] w = new int[period + 1, maxOld];
+            char[,] x = new char[period + 1, maxOld];
+            Desision(r, u, c, ref w, ref x);
+            int mark = w[1, 3];
+            max_val_result.Text = "Максимальний прибуток становить - " + mark;
+            int[,] w1 = new int[period, maxOld];
+            char[,] x1 = new char[period, maxOld];
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    w1[i, j] = w[i + 1, j];
+                    x1[i, j] = x[i + 1, j];
+                }
+            }
+            string[] strat = CreateStrategy(x1);
+            if (period % 2 == 0)
+            {
+                strategy_table.RowCount = period / 2;
+            }
+            else
+            {
+                strategy_table.RowCount = period / 2 + 1;
+            }
+            strategy_table.ColumnCount = 2;
+            for (int i = 0; i < period; i++)
+            {
+                if (i >= period / 2)
+                {
+                    strategy_table.Rows[i - period / 2].Cells[1].Value = strat[i];
+                }
+                else
+                {
+                    strategy_table.Rows[i].Cells[0].Value = strat[i];
+                }
+            }
+            strategy_table.Height = strategy_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
+            data_result_label.Location = new System.Drawing.Point(26, strategy_table.Location.Y + strategy_table.Height + 30);
+            data_result_table.RowCount = period;
+            data_result_table.ColumnCount = maxOld;
+            for (int i = 0; i < period; i++)
+            {
+                data_result_table.Rows[i].HeaderCell.Value = (i + 1).ToString();
+            }
+            for (int j = 0; j < maxOld; j++)
+            {
+                data_result_table.Columns[j].HeaderText = Convert.ToString(j);
+            }
+            data_result_table.Height = data_result_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + data_result_table.ColumnHeadersHeight;
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    if (x[i + 1, j] == 's')
+                    {
+                        data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(0, 255, 0);
+                        data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                    }
+                    else
+                    {
+                        if (x[i + 1, j] == 'c')
+                        {
+                            data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(255, 0, 0);
+                            data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                        }
+                    }
+                }
+            }
+            data_result_table.Location = new System.Drawing.Point(26, data_result_label.Location.Y + data_result_label.Height + 30);
+        }
+
+        private void LessU_Click(object sender, EventArgs e)
+        {
+            r_label.Visible = false;
+            c_label.Visible = false;
+            u_label.Visible = false;
+            r_table.Visible = false;
+            u_table.Visible = false;
+            c_table.Visible = false;
+            desisison_table.Visible = false;
+            max_val_result.Visible = true;
+            strategy_table.Visible = true;
+            data_result_label.Visible = true;
+            data_result_table.Visible = true;
+            int[,] r = ArrCreate(DataFromXML(), 0);
+            int[,] u = ArrCreate(DataFromXML(), 1);
+            int[,] c = ArrCreate(DataFromXML(), 2);
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    u[i, j] = u[i, j] - 5;
+                }
+            }
+            int[,] w = new int[period + 1, maxOld];
+            char[,] x = new char[period + 1, maxOld];
+            Desision(r, u, c, ref w, ref x);
+            int mark = w[1, 3];
+            max_val_result.Text = "Максимальний прибуток становить - " + mark;
+            int[,] w1 = new int[period, maxOld];
+            char[,] x1 = new char[period, maxOld];
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    w1[i, j] = w[i + 1, j];
+                    x1[i, j] = x[i + 1, j];
+                }
+            }
+            string[] strat = CreateStrategy(x1);
+            if (period % 2 == 0)
+            {
+                strategy_table.RowCount = period / 2;
+            }
+            else
+            {
+                strategy_table.RowCount = period / 2 + 1;
+            }
+            strategy_table.ColumnCount = 2;
+            for (int i = 0; i < period; i++)
+            {
+                if (i >= period / 2)
+                {
+                    strategy_table.Rows[i - period / 2].Cells[1].Value = strat[i];
+                }
+                else
+                {
+                    strategy_table.Rows[i].Cells[0].Value = strat[i];
+                }
+            }
+            strategy_table.Height = strategy_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
+            data_result_label.Location = new System.Drawing.Point(26, strategy_table.Location.Y + strategy_table.Height + 30);
+            data_result_table.RowCount = period;
+            data_result_table.ColumnCount = maxOld;
+            for (int i = 0; i < period; i++)
+            {
+                data_result_table.Rows[i].HeaderCell.Value = (i + 1).ToString();
+            }
+            for (int j = 0; j < maxOld; j++)
+            {
+                data_result_table.Columns[j].HeaderText = Convert.ToString(j);
+            }
+            data_result_table.Height = data_result_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + data_result_table.ColumnHeadersHeight;
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    if (x[i + 1, j] == 's')
+                    {
+                        data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(0, 255, 0);
+                        data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                    }
+                    else
+                    {
+                        if (x[i + 1, j] == 'c')
+                        {
+                            data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(255, 0, 0);
+                            data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                        }
+                    }
+                }
+            }
+            data_result_table.Location = new System.Drawing.Point(26, data_result_label.Location.Y + data_result_label.Height + 30);
+        }
+        private void GreaterU_Click(object sender, EventArgs e)
+        {
+            r_label.Visible = false;
+            c_label.Visible = false;
+            u_label.Visible = false;
+            r_table.Visible = false;
+            u_table.Visible = false;
+            c_table.Visible = false;
+            desisison_table.Visible = false;
+            max_val_result.Visible = true;
+            strategy_table.Visible = true;
+            data_result_label.Visible = true;
+            data_result_table.Visible = true;
+            int[,] r = ArrCreate(DataFromXML(), 0);
+            int[,] u = ArrCreate(DataFromXML(), 1);
+            int[,] c = ArrCreate(DataFromXML(), 2);
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    u[i, j] = u[i, j] + 5;
+                }
+            }
+            int[,] w = new int[period + 1, maxOld];
+            char[,] x = new char[period + 1, maxOld];
+            Desision(r, u, c, ref w, ref x);
+            int mark = w[1, 3];
+            max_val_result.Text = "Максимальний прибуток становить - " + mark;
+            int[,] w1 = new int[period, maxOld];
+            char[,] x1 = new char[period, maxOld];
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    w1[i, j] = w[i + 1, j];
+                    x1[i, j] = x[i + 1, j];
+                }
+            }
+            string[] strat = CreateStrategy(x1);
+            if (period % 2 == 0)
+            {
+                strategy_table.RowCount = period / 2;
+            }
+            else
+            {
+                strategy_table.RowCount = period / 2 + 1;
+            }
+            strategy_table.ColumnCount = 2;
+            for (int i = 0; i < period; i++)
+            {
+                if (i >= period / 2)
+                {
+                    strategy_table.Rows[i - period / 2].Cells[1].Value = strat[i];
+                }
+                else
+                {
+                    strategy_table.Rows[i].Cells[0].Value = strat[i];
+                }
+            }
+            strategy_table.Height = strategy_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
+            data_result_label.Location = new System.Drawing.Point(26, strategy_table.Location.Y + strategy_table.Height + 30);
+            data_result_table.RowCount = period;
+            data_result_table.ColumnCount = maxOld;
+            for (int i = 0; i < period; i++)
+            {
+                data_result_table.Rows[i].HeaderCell.Value = (i + 1).ToString();
+            }
+            for (int j = 0; j < maxOld; j++)
+            {
+                data_result_table.Columns[j].HeaderText = Convert.ToString(j);
+            }
+            data_result_table.Height = data_result_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + data_result_table.ColumnHeadersHeight;
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    if (x[i + 1, j] == 's')
+                    {
+                        data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(0, 255, 0);
+                        data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                    }
+                    else
+                    {
+                        if (x[i + 1, j] == 'c')
+                        {
+                            data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(255, 0, 0);
+                            data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                        }
+                    }
+                }
+            }
+            data_result_table.Location = new System.Drawing.Point(26, data_result_label.Location.Y + data_result_label.Height + 30);
+        }
+
+        private void LessR_Click(object sender, EventArgs e)
+        {
+            r_label.Visible = false;
+            c_label.Visible = false;
+            u_label.Visible = false;
+            r_table.Visible = false;
+            u_table.Visible = false;
+            c_table.Visible = false;
+            desisison_table.Visible = false;
+            max_val_result.Visible = true;
+            strategy_table.Visible = true;
+            data_result_label.Visible = true;
+            data_result_table.Visible = true;
+            int[,] r = ArrCreate(DataFromXML(), 0);
+            int[,] u = ArrCreate(DataFromXML(), 1);
+            int[,] c = ArrCreate(DataFromXML(), 2);
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    r[i, j] = r[i, j] - 25;
+                }
+            }
+            int[,] w = new int[period + 1, maxOld];
+            char[,] x = new char[period + 1, maxOld];
+            Desision(r, u, c, ref w, ref x);
+            int mark = w[1, 3];
+            max_val_result.Text = "Максимальний прибуток становить - " + mark;
+            int[,] w1 = new int[period, maxOld];
+            char[,] x1 = new char[period, maxOld];
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    w1[i, j] = w[i + 1, j];
+                    x1[i, j] = x[i + 1, j];
+                }
+            }
+            string[] strat = CreateStrategy(x1);
+            if (period % 2 == 0)
+            {
+                strategy_table.RowCount = period / 2;
+            }
+            else
+            {
+                strategy_table.RowCount = period / 2 + 1;
+            }
+            strategy_table.ColumnCount = 2;
+            for (int i = 0; i < period; i++)
+            {
+                if (i >= period / 2)
+                {
+                    strategy_table.Rows[i - period / 2].Cells[1].Value = strat[i];
+                }
+                else
+                {
+                    strategy_table.Rows[i].Cells[0].Value = strat[i];
+                }
+            }
+            strategy_table.Height = strategy_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
+            data_result_label.Location = new System.Drawing.Point(26, strategy_table.Location.Y + strategy_table.Height + 30);
+            data_result_table.RowCount = period;
+            data_result_table.ColumnCount = maxOld;
+            for (int i = 0; i < period; i++)
+            {
+                data_result_table.Rows[i].HeaderCell.Value = (i + 1).ToString();
+            }
+            for (int j = 0; j < maxOld; j++)
+            {
+                data_result_table.Columns[j].HeaderText = Convert.ToString(j);
+            }
+            data_result_table.Height = data_result_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + data_result_table.ColumnHeadersHeight;
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    if (x[i + 1, j] == 's')
+                    {
+                        data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(0, 255, 0);
+                        data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                    }
+                    else
+                    {
+                        if (x[i + 1, j] == 'c')
+                        {
+                            data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(255, 0, 0);
+                            data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                        }
+                    }
+                }
+            }
+            data_result_table.Location = new System.Drawing.Point(26, data_result_label.Location.Y + data_result_label.Height + 30);
+        }
+        
+        private void GreaterR_Click(object sender, EventArgs e)
+        {
+            r_label.Visible = false;
+            c_label.Visible = false;
+            u_label.Visible = false;
+            r_table.Visible = false;
+            u_table.Visible = false;
+            c_table.Visible = false;
+            desisison_table.Visible = false;
+            max_val_result.Visible = true;
+            strategy_table.Visible = true;
+            data_result_label.Visible = true;
+            data_result_table.Visible = true;
+            int[,] r = ArrCreate(DataFromXML(), 0);
+            int[,] u = ArrCreate(DataFromXML(), 1);
+            int[,] c = ArrCreate(DataFromXML(), 2);
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    r[i, j] = r[i, j] + 25;
+                }
+            }
+            int[,] w = new int[period + 1, maxOld];
+            char[,] x = new char[period + 1, maxOld];
+            Desision(r, u, c, ref w, ref x);
+            int mark = w[1, 3];
+            max_val_result.Text = "Максимальний прибуток становить - " + mark;
+            int[,] w1 = new int[period, maxOld];
+            char[,] x1 = new char[period, maxOld];
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    w1[i, j] = w[i + 1, j];
+                    x1[i, j] = x[i + 1, j];
+                }
+            }
+            string[] strat = CreateStrategy(x1);
+            if (period % 2 == 0)
+            {
+                strategy_table.RowCount = period / 2;
+            }
+            else
+            {
+                strategy_table.RowCount = period / 2 + 1;
+            }
+            strategy_table.ColumnCount = 2;
+            for (int i = 0; i < period; i++)
+            {
+                if (i >= period / 2)
+                {
+                    strategy_table.Rows[i - period / 2].Cells[1].Value = strat[i];
+                }
+                else
+                {
+                    strategy_table.Rows[i].Cells[0].Value = strat[i];
+                }
+            }
+            strategy_table.Height = strategy_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
+            data_result_label.Location = new System.Drawing.Point(26, strategy_table.Location.Y + strategy_table.Height + 30);
+            data_result_table.RowCount = period;
+            data_result_table.ColumnCount = maxOld;
+            for (int i = 0; i < period; i++)
+            {
+                data_result_table.Rows[i].HeaderCell.Value = (i + 1).ToString();
+            }
+            for (int j = 0; j < maxOld; j++)
+            {
+                data_result_table.Columns[j].HeaderText = Convert.ToString(j);
+            }
+            data_result_table.Height = data_result_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + data_result_table.ColumnHeadersHeight;
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    if (x[i + 1, j] == 's')
+                    {
+                        data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(0, 255, 0);
+                        data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                    }
+                    else
+                    {
+                        if (x[i + 1, j] == 'c')
+                        {
+                            data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(255, 0, 0);
+                            data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                        }
+                    }
+                }
+            }
+            data_result_table.Location = new System.Drawing.Point(26, data_result_label.Location.Y + data_result_label.Height + 30);
+        }        
+
+        private void Result_Click(object sender, EventArgs e)
+        {
+            r_label.Visible = false;
+            c_label.Visible = false;
+            u_label.Visible = false;
+            r_table.Visible = false;
+            u_table.Visible = false;
+            c_table.Visible = false;
+            desisison_table.Visible = false;
+            max_val_result.Visible = true;
+            strategy_table.Visible = true;
+            data_result_label.Visible = true;
+            data_result_table.Visible = true;
+            int[,] r = ArrCreate(DataFromXML(), 0);
+            int[,] u = ArrCreate(DataFromXML(), 1);
+            int[,] c = ArrCreate(DataFromXML(), 2);
+            int[,] w = new int[period + 1, maxOld];
+            char[,] x = new char[period + 1, maxOld];
+            Desision(r, u, c, ref w, ref x);
+            int mark = w[1, 3];
+            max_val_result.Text = "Максимальний прибуток становить - " + mark;
+            int[,] w1 = new int[period, maxOld];
+            char[,] x1 = new char[period, maxOld];
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    w1[i, j] = w[i + 1, j];
+                    x1[i, j] = x[i + 1, j];
+                }
+            }
+            string[] strat = CreateStrategy(x1);
+            if (period % 2 == 0)
+            {
+                strategy_table.RowCount = period / 2;
+            }
+            else
+            {
+                strategy_table.RowCount = period / 2 + 1;
+            }
+            strategy_table.ColumnCount = 2;
+            for (int i = 0; i < period; i++)
+            {
+                if (i >= period / 2)
+                {
+                    strategy_table.Rows[i - period / 2].Cells[1].Value = strat[i];
+                }
+                else
+                {
+                    strategy_table.Rows[i].Cells[0].Value = strat[i];
+                }
+            }
+            strategy_table.Height = strategy_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
+            data_result_label.Location = new System.Drawing.Point(26, strategy_table.Location.Y + strategy_table.Height + 30);
+            //запис результатів до файлу
+            ToFile(strat);
+            //обчислення таблиці F(i)
+            data_result_table.RowCount = period;
+            data_result_table.ColumnCount = maxOld;
+            for (int i = 0; i < period; i++)
+            {
+                data_result_table.Rows[i].HeaderCell.Value = (i + 1).ToString();
+            }
+            for (int j = 0; j < maxOld; j++)
+            {
+                data_result_table.Columns[j].HeaderText = Convert.ToString(j);
+            }
+            data_result_table.Height = data_result_table.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + data_result_table.ColumnHeadersHeight;
+            for (int i = 0; i < period; i++)
+            {
+                for (int j = 0; j < maxOld; j++)
+                {
+                    if (x[i + 1, j] == 's')
+                    {
+                        data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(0, 255, 0);
+                        data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                    }
+                    else
+                    {
+                        if (x[i + 1, j] == 'c')
+                        {
+                            data_result_table.Rows[i].Cells[j].Style.BackColor = Color.FromArgb(255, 0, 0);
+                            data_result_table.Rows[i].Cells[j].Value = w[i + 1, j];
+                        }
+                    }
+                }
+            }
+            data_result_table.Location = new System.Drawing.Point(26, data_result_label.Location.Y + data_result_label.Height + 30);
+        }
+
+        //Close window
+        private void MenuClose_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
