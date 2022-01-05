@@ -25,7 +25,7 @@ namespace TPR
         private int[][,] DataFromXML()
         {
             int i, j = 0, f;
-            int[][,] ArrYear = new int[11][,];
+            int[][,] ArrYear = new int[period+1][,];
             XmlDocument xDoc = new XmlDocument();
             xDoc.Load("mydata.xml");
             XmlElement xRoot = xDoc.DocumentElement;
@@ -45,7 +45,6 @@ namespace TPR
                         i = Int32.Parse(attrYearPro.Value);
                         ArrYear[i] = new int[old, maxOld - 2 - Int32.Parse(attrYearPro.Value)];
                     }
-
                     foreach (XmlNode childnode in xnode.ChildNodes)
                     {
                         XmlNode atrYear = childnode.Attributes.GetNamedItem("year");
@@ -368,7 +367,7 @@ namespace TPR
             {
                 for (int j = 0; j < maxOld; j++)
                 {
-                    if (i % 2 == 0) c[i, j] = c[i, j] - 100;
+                    if (i % 2 == 0|| j%3==0) c[i, j] = c[i, j] - 175;
                 }
             }
             int[,] w = new int[period + 1, maxOld];
@@ -462,7 +461,7 @@ namespace TPR
             {
                 for (int j = 0; j < maxOld; j++)
                 {
-                    c[i, j] = c[i, j] + 50;
+                    if (i % 2 == 0 || j % 3 == 0) c[i, j] = c[i, j] +50;
                 }
             }
             int[,] w = new int[period + 1, maxOld];
@@ -556,7 +555,7 @@ namespace TPR
             {
                 for (int j = 0; j < maxOld; j++)
                 {
-                    u[i, j] = u[i, j] - 5;
+                    if (i % 2 == 0 || j % 3 == 0) u[i, j] = u[i, j] - 35;
                 }
             }
             int[,] w = new int[period + 1, maxOld];
@@ -649,7 +648,7 @@ namespace TPR
             {
                 for (int j = 0; j < maxOld; j++)
                 {
-                    u[i, j] = u[i, j] + 5;
+                    u[i, j] = u[i, j] + 150;
                 }
             }
             int[,] w = new int[period + 1, maxOld];
